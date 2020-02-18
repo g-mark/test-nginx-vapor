@@ -29,3 +29,27 @@ web: bin/start-nginx Run serve --env production --port 8080 --hostname 0.0.0.0
 
 - `bin/start-nginx` starts ngnix
 - `Run serve --env production --port 8080 --hostname 0.0.0.0` runs the vapor app.
+
+When ngnix is built, it uses the config file at `config/nginx.conf.erb` as the primary configuration for the ngnix server.  Towards the bottom of the file is where you'll find the magic sauce:
+
+```
+   root /app/Public;
+   
+   # Serve all public/static files via nginx and then fallback to Vapor for the rest
+   try_files $uri @proxy;
+   
+   location @proxy {
+      proxy_pass http://127.0.0.1:8080;
+      proxy_pass_header Server;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_connect_timeout 3s;
+      proxy_read_timeout 10s;
+      proxy_redirect off;
+   }
+```
+
+So, when a URL is requested, ngnix will see if there's a file it can deliver from the `Public` directory (everything in the git repo is installed at `/app`, so the `root /app/Public` directive in the config file points to our `Public` directory as the root of the web server).  If it can't find a file, it'll pas the URL on to the Vapor app.
+
+NGiNx listens on the normal http port (80), and when needed, proxies the requests on to port 8080, where the Vapor app is listening.
