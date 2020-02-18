@@ -15,3 +15,17 @@ Example of putting NGiNx in front of Vapor on Heroku
 6. Add your app's git URL as an origin for you local repo
 7. Push the repo to the Heroku origin.
    This will deploy the app.
+
+#### How it works
+
+When code is pushed to the app's git repo, Heroku will run a post_receive hook that triggers each of the buildpacks added to the app, in the order that they are listed in your `Settings` pane.  This also happes to be the same order that they were added in the above steps: `ngnix` then `vapor`.
+
+Once both buildpacks have finished building, the `Procfile` is executed.
+
+The `Procfile` in this repo has a single line, that runs two commands:
+```
+web: bin/start-nginx Run serve --env production --port 8080 --hostname 0.0.0.0
+```
+
+- `bin/start-nginx` starts ngnix
+- `Run serve --env production --port 8080 --hostname 0.0.0.0` runs the vapor app.
