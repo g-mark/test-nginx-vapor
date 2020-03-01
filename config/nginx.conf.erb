@@ -35,6 +35,10 @@ http {
 
     root /app/Public;
     
+    if ($http_x_forwarded_proto != "https") {
+        return 302 https://$host$request_uri;
+	}
+    
 	# Serve all public/static files via nginx and then fallback to Vapor for the rest
 	try_files $uri @proxy;
     
