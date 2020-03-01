@@ -20,7 +20,7 @@ The setup of this branch is that NGiNx will try for a static file and deliver th
 #### Heroku setup
 
 1. Create an app
-2. Add official ngnix buildback, I used:  
+2. Add official ngnix buildpack, I used:  
    [Heroku Buildpack: NGINX](https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx)  
    `heroku-community/nginx` (or https://github.com/heroku/heroku-buildpack-nginx.git)
 3. Add official Vapor buildpack - I used:  
@@ -34,7 +34,7 @@ The setup of this branch is that NGiNx will try for a static file and deliver th
 
 #### How it works
 
-When code is pushed to the app's git repo, Heroku will run a post_receive hook that triggers each of the buildpacks added to the app, in the order that they are listed in your `Settings` pane.  This also happes to be the same order that they were added in the above steps: `ngnix` then `vapor`.
+When code is pushed to the app's git repo, Heroku will run a post_receive hook that triggers each of the buildpacks added to the app, in the order that they are listed in your `Settings` pane.  This also happens to be the same order that they were added in the above steps: `ngnix` then `vapor`.
 
 Once both buildpacks have finished building, the `Procfile` is executed.
 
