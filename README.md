@@ -1,6 +1,22 @@
 # test-nginx-vapor
 Example of putting NGiNx in front of Vapor on Heroku
 
+There are two requests handled by NGiNx:
+
+```
+/index.html
+/other.html
+```
+
+There are two Vapor routes:
+
+```
+/
+/hello/:string
+```
+
+The setup of this branch is that NGiNx will try for a static file and deliver that.  If it can't find a static file, it will pass the request on to Vapor.  This means that all 404 errors are handled by Vapor.
+
 #### Heroku setup
 
 1. Create an app
